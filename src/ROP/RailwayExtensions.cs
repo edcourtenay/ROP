@@ -78,5 +78,21 @@ namespace ROP
             return input => result.Invoke(input).TeeFailure(teeAction);
         }
 
+        public static void Handle<TA, TB>(this Result<TA, TB> twoTrackInput, Action<TA> onSuccess, Action<TB> onFailure = null)
+        {
+            if (twoTrackInput is Result<TA, TB>.Success success)
+            {
+                onSuccess(success);
+            }
+            else if (onFailure != null && twoTrackInput is Result<TA, TB>.Failure failure)
+            {
+                onFailure(failure);
+            }
+        }
+
+        public static Action<TA> Handle<TA, TB, TC>(this Func<TA, Result<TB, TC>> twoTrackInputFunction, Action<TB> onSuccess, Action<TC> onFailure = null)
+        {
+            return input => twoTrackInputFunction.Invoke(input).Handle(onSuccess, onFailure);
+        }
     }
 }

@@ -9,44 +9,27 @@ namespace ROP.Tests
     public class BindTests
     {
         [Theory]
-        [InlineData(7, true, null)]
-        [InlineData(12, false, "Number too large")]
-        [InlineData(4, false, "Number too small")]
-        public void Bind_should_return_expected_result(int number, bool successExpected, string errorMessage)
+        [InlineData(7, null)]
+        [InlineData(12, "Number too large")]
+        [InlineData(4, "Number too small")]
+        public void Bind_should_return_expected_result(int number, string errorMessage)
         {
-            var result = Inner.NumberTooLargeProperty
+            Inner.NumberTooLargeProperty
                 .Bind(Inner.NumberTooSmallProperty)
+                .Handle(onSuccess => onSuccess.Should().Be(number), onFailure => onFailure.Should().Be(errorMessage))
                 .Invoke(number);
-
-            if (successExpected)
-            {
-                ((int) result.AsSuccess).Should().Be(number);
-            }
-            else
-            {
-                ((string) result.AsFailure).Should().Be(errorMessage);
-            }
         }
 
         [Theory]
-        [InlineData(7, true, null)]
-        [InlineData(12, false, "Number too large")]
-        [InlineData(4, false, "Number too small")]
-        public void Functional_bind_should_return_expected_result(int number, bool successExpected, string errorMessage)
+        [InlineData(7, null)]
+        [InlineData(12, "Number too large")]
+        [InlineData(4, "Number too small")]
+        public void Functional_bind_should_return_expected_result(int number, string errorMessage)
         {
-            var result = Inner.NumberTooLargeMethod(number)
-                .Bind(Inner.NumberTooSmallMethod);
-
-            if (successExpected)
-            {
-                ((int) result.AsSuccess).Should().Be(number);
-            }
-            else
-            {
-                ((string) result.AsFailure).Should().Be(errorMessage);
-            }
+            Inner.NumberTooLargeMethod(number)
+                .Bind(Inner.NumberTooSmallMethod)
+                .Handle(onSuccess => onSuccess.Should().Be(number), onFailure => onFailure.Should().Be(errorMessage));
         }
-
 
         [Theory]
         [InlineData(7, 17, true, null)]

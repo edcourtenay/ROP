@@ -11,19 +11,15 @@ namespace ROP.Tests
         [InlineData(30, false)]
         public void Map_should_return_expected_success_result(int value, bool expectedSuccess)
         {
-            var result = Inner.CheckMethod(value)
-                .Map(Inner.MapMethod);
-
-            if (expectedSuccess)
-            {
-                result.IsSuccess.Should().BeTrue();
-                result.AsSuccess.Item.Should().Be($"The number is: {value}");
-            }
-            else
-            {
-                result.IsFailure.Should().BeTrue();
-                result.AsFailure.Item.Should().Be("Number too large");
-            }
+            Inner.CheckMethod(value)
+                .Map(Inner.MapMethod)
+                .Handle(onSuccess => {
+                    expectedSuccess.Should().BeTrue();
+                    onSuccess.Should().Be($"The number is: {value}");
+                }, onFailure => {
+                    expectedSuccess.Should().BeFalse();
+                    onFailure.Should().Be("Number too large");
+                });
         }
 
         [Theory]
@@ -31,20 +27,16 @@ namespace ROP.Tests
         [InlineData(30, false)]
         public void Functional_map_should_return_expected_success_result(int value, bool expectedSuccess)
         {
-            var result = Inner.CheckProperty
+            Inner.CheckProperty
                 .Map(Inner.MapProperty)
+                .Handle(onSuccess => {
+                    expectedSuccess.Should().BeTrue();
+                    onSuccess.Should().Be($"The number is: {value}");
+                }, onFailure => {
+                    expectedSuccess.Should().BeFalse();
+                    onFailure.Should().Be("Number too large");
+                })
                 .Invoke(value);
-
-            if (expectedSuccess)
-            {
-                result.IsSuccess.Should().BeTrue();
-                result.AsSuccess.Item.Should().Be($"The number is: {value}");
-            }
-            else
-            {
-                result.IsFailure.Should().BeTrue();
-                result.AsFailure.Item.Should().Be("Number too large");
-            }
         }
 
         class Inner
