@@ -80,19 +80,32 @@ namespace ROP
 
         public static void Handle<TA, TB>(this Result<TA, TB> twoTrackInput, Action<TA> onSuccess, Action<TB> onFailure = null)
         {
-            if (twoTrackInput is Result<TA, TB>.Success success)
+            switch (twoTrackInput)
             {
-                onSuccess(success);
-            }
-            else if (onFailure != null && twoTrackInput is Result<TA, TB>.Failure failure)
-            {
-                onFailure(failure);
+                case Result<TA, TB>.Success success:
+                    onSuccess(success);
+                    break;
+                case Result<TA, TB>.Failure failure:
+                    onFailure?.Invoke(failure);
+                    break;
             }
         }
 
         public static Action<TA> Handle<TA, TB, TC>(this Func<TA, Result<TB, TC>> twoTrackInputFunction, Action<TB> onSuccess, Action<TC> onFailure = null)
         {
             return input => twoTrackInputFunction.Invoke(input).Handle(onSuccess, onFailure);
+        }
+
+        public static TC Merge<TA, TB, TC>(this Result<TA, TB> twoTrackInput, Func<TA, TC> successFunc,
+            Func<TB, TC> failureFunc) =>
+            twoTrackInput.IsSuccess
+                ? successFunc(twoTrackInput.AsSuccess.Item)
+                : failureFunc(twoTrackInput.AsFailure.Item);
+
+        public static Func<TA, TD> Merge<TA, TB, TC, TD>(this Func<TA, Result<TB, TC>> twoTrackInputFunction,
+            Func<TB, TD> successFunc, Func<TC, TD> failureFunc)
+        {
+            return input => twoTrackInputFunction.Invoke(input).Merge(successFunc, failureFunc);
         }
     }
 }

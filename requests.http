@@ -1,0 +1,60 @@
+
+### Happy Path
+
+POST http://localhost:5000/api/transfer
+Content-Type: application/json
+Accept: application/json
+
+{
+    "AccountFrom": "12345678",
+    "AccountTo": "12445690",
+    "TransferAmount": 56.0
+}
+
+
+### Insufficient Funds
+
+POST http://localhost:5000/api/transfer
+Content-Type: application/json
+
+{
+    "AccountFrom": "12345678",
+    "AccountTo": "12445690",
+    "TransferAmount": 220.0
+}
+
+### Ringfence service timed out
+
+POST http://localhost:5000/api/transfer
+Content-Type: application/json
+Accept: application/json
+
+{
+    "AccountFrom": "82345678",
+    "AccountTo": "12445690",
+    "TransferAmount": 56.0
+}
+
+### Account not recognised
+
+POST http://localhost:5000/api/transfer
+Content-Type: application/json
+Accept: application/json
+
+{
+    "AccountFrom": "72345678",
+    "AccountTo": "12445690",
+    "TransferAmount": 56.0
+}
+
+### Network failure while attempting to fulfill ringfence
+
+POST http://localhost:5000/api/transfer
+Content-Type: application/json
+Accept: application/json
+
+{
+    "AccountFrom": "42345678",
+    "AccountTo": "12445690",
+    "TransferAmount": 56.0
+}

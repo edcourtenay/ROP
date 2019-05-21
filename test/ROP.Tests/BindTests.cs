@@ -78,7 +78,9 @@ namespace ROP.Tests
         private class Inner
         {
             public static Func<int, Result<int, string>> NumberTooLargeProperty { get; }
-                = NumberTooLargeMethod;
+                = i => i > 10
+                    ? Result<int, string>.NewFailure("Number too large")
+                    : Result<int, string>.NewSuccess(i);
 
             public static Func<int, Result<int, string>> NumberTooSmallProperty { get; }
                 = NumberTooSmallMethod;
