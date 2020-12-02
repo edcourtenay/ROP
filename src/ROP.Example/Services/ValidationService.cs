@@ -17,13 +17,13 @@ namespace ROP.Example.Services
 
         private Func<TransferRequest, Result<TransferRequest, string>> ValidateFromAccount =>
             request => _accountService.AccountExists(request.AccountFrom)
-                ? Result<TransferRequest, string>.NewSuccess(request)
-                : Result<TransferRequest, string>.NewFailure($"AccountFrom {request.AccountFrom} not recognised");
+                ? new Result<TransferRequest, string>.Success(request)
+                : new Result<TransferRequest, string>.Failure($"AccountFrom {request.AccountFrom} not recognised");
 
         private Func<TransferRequest, Result<TransferRequest, string>> ValidateToAccount =>
             request => _accountService.AccountExists(request.AccountTo)
-                ? Result<TransferRequest, string>.NewSuccess(request)
-                : Result<TransferRequest, string>.NewFailure($"AccountTo {request.AccountTo} not recognised");
+                ? new Result<TransferRequest, string>.Success(request)
+                : new Result<TransferRequest, string>.Failure($"AccountTo {request.AccountTo} not recognised");
 
         public Func<TransferRequest, Result<TransferRequest, string>> ValidateAccounts =>
             ValidateFromAccount

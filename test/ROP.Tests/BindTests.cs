@@ -79,8 +79,8 @@ namespace ROP.Tests
         {
             public static Func<int, Result<int, string>> NumberTooLargeProperty { get; }
                 = i => i > 10
-                    ? Result<int, string>.NewFailure("Number too large")
-                    : Result<int, string>.NewSuccess(i);
+                    ? new Result<int, string>.Failure("Number too large")
+                    : new Result<int, string>.Success(i);
 
             public static Func<int, Result<int, string>> NumberTooSmallProperty { get; }
                 = NumberTooSmallMethod;
@@ -91,15 +91,15 @@ namespace ROP.Tests
             public static Result<int, string> NumberTooLargeMethod(int i)
             {
                 return i > 10
-                    ? Result<int, string>.NewFailure("Number too large")
-                    : Result<int, string>.NewSuccess(i);
+                    ? new Result<int, string>.Failure("Number too large")
+                    : new Result<int, string>.Success(i);
             }
 
             public static Result<int, string> NumberTooSmallMethod(int i)
             {
                 return i < 5
-                    ? Result<int, string>.NewFailure("Number too small")
-                    : Result<int, string>.NewSuccess(i);
+                    ? new Result<int, string>.Failure("Number too small")
+                    : new Result<int, string>.Success(i);
             }
 
             public static Task<Result<long, string>> SlowCalculationMethod(int i)

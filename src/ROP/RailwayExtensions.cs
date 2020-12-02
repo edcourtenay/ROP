@@ -7,9 +7,12 @@ namespace ROP
         public static Result<TB, TC> Bind<TA, TB, TC>(this Result<TA, TC> twoTrackInput,
             Func<TA, Result<TB, TC>> switchFunction)
         {
-            return twoTrackInput.IsSuccess
-                ? switchFunction(twoTrackInput.AsSuccess.Item)
-                : Result<TB, TC>.NewFailure(twoTrackInput.AsFailure.Item);
+            return twoTrackInput switch
+            {
+                Result<TA, TC>.Success success => switchFunction(success),
+                Result<TA, TC>.Failure failure => new Result<TB, TC>.Failure(failure),
+                _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
+            };
         }
 
         public static Func<TA, Result<TC, TD>> Bind<TA, TB, TC, TD>(this Func<TA, Result<TB, TD>> twoTrackInputFunction,
@@ -25,9 +28,12 @@ namespace ROP
 
         public static Result<TB, TC> Map<TA, TB, TC>(this Result<TA, TC> twoTrackInput, Func<TA, TB> oneTrackFunction)
         {
-            return twoTrackInput.IsSuccess
-                ? Result<TB, TC>.NewSuccess(oneTrackFunction.Invoke(twoTrackInput.AsSuccess.Item))
-                : Result<TB, TC>.NewFailure(twoTrackInput.AsFailure.Item);
+            return twoTrackInput switch
+            {
+                Result<TA, TC>.Success success => new Result<TB, TC>.Success(oneTrackFunction.Invoke(success)),
+                Result<TA, TC>.Failure failure => new Result<TB, TC>.Failure(failure),
+                _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
+            };
         }
 
         public static Func<TA, Result<TC, TD>> Map<TA, TB, TC, TD>(this Func<TA, Result<TB, TD>> twoTrackInputFunction,
@@ -38,7 +44,7 @@ namespace ROP
 
         public static Result<TB, TC> Switch<TA, TB, TC>(this TA input, Func<TA, TB> oneTrackFunction)
         {
-            return Result<TB, TC>.NewSuccess(oneTrackFunction.Invoke(input));
+            return new Result<TB, TC>.Success(oneTrackFunction.Invoke(input));
         }
 
         public static Func<TA, Result<TB, TC>> Switch<TA, TB, TC>(this Func<TA, TB> func)
@@ -97,10 +103,15 @@ namespace ROP
         }
 
         public static TC Merge<TA, TB, TC>(this Result<TA, TB> twoTrackInput, Func<TA, TC> successFunc,
-            Func<TB, TC> failureFunc) =>
-            twoTrackInput.IsSuccess
-                ? successFunc(twoTrackInput.AsSuccess.Item)
-                : failureFunc(twoTrackInput.AsFailure.Item);
+            Func<TB, TC> failureFunc)
+        {
+            return twoTrackInput switch
+            {
+                Result<TA, TB>.Success success => successFunc(success),
+                Result<TA, TB>.Failure failure => failureFunc(failure),
+                _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
+            };
+        }
 
         public static Func<TA, TD> Merge<TA, TB, TC, TD>(this Func<TA, Result<TB, TC>> twoTrackInputFunction,
             Func<TB, TD> successFunc, Func<TC, TD> failureFunc)

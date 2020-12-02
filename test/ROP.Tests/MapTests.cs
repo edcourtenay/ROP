@@ -52,8 +52,8 @@ namespace ROP.Tests
 
             public static Result<int, string> CheckMethod(int i)
                 => i < 20
-                    ? Result<int, string>.NewSuccess(i)
-                    : Result<int, string>.NewFailure("Number too large");
+                    ? new Result<int, string>.Success(i)
+                    : new Result<int, string>.Failure("Number too large");
         }
     }
 }

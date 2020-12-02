@@ -43,11 +43,12 @@ namespace ROP
         private static async Task<Result<TS, TF>> WhenSuccessful<TA, TS, TF>(this Task<Result<TA, TF>> twoTrackInput,
             Func<TA, Task<Result<TS, TF>>> func)
         {
-            var input = await twoTrackInput;
-
-            return input.IsSuccess
-                ? await func(input.AsSuccess.Item)
-                : Result<TS, TF>.NewFailure(input.AsFailure.Item);
+            return await twoTrackInput switch
+            {
+                Result<TA, TF>.Success success => await func(success),
+                Result<TA, TF>.Failure failure => new Result<TS, TF>.Failure(failure),
+                _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
+            };
         }
     }
 }

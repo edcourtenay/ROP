@@ -8,7 +8,7 @@ namespace ROP.Tests
         [Fact]
         public void NewSuccess_should_return_Success_with_expected_values()
         {
-            var result = Result<int, string>.NewSuccess(10);
+            var result = new Result<int, string>.Success(10);
 
             result.IsSuccess.Should().BeTrue();
             result.IsFailure.Should().BeFalse();
@@ -24,7 +24,7 @@ namespace ROP.Tests
         [Fact]
         public void NewFailure_should_return_Failure_with_expected_values()
         {
-            var result = Result<int, string>.NewFailure("error state");
+            var result = new Result<int, string>.Failure("error state");
 
             result.IsSuccess.Should().BeFalse();
             result.IsFailure.Should().BeTrue();
