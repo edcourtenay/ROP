@@ -39,10 +39,10 @@ namespace ROP.Tests
                 .Invoke(value);
         }
 
-        class Inner
+        private static class Inner
         {
-            public static Func<int, string> MapProperty
-                => MapMethod;
+            public static Func<int, string> MapProperty { get; }
+                = MapMethod;
 
             public static string MapMethod(int i)
                 => $"The number is: {i}";

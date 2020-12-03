@@ -24,12 +24,13 @@ namespace ROP.Example.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] TransferRequest request)
         {
-            return _validationService.ValidateAccounts
-                .Tee(transferRequest => _logger.LogInformation("Accounts validated"))
-                .Bind(_transferService.CheckSufficentFunds)
-                .Bind(_transferService.RingfenceSourceAccount)
-                .Bind(_transferService.TransferRingfencedAmount)
-                .Merge(Ok, s => (ActionResult)BadRequest(s))
+            var func = _validationService.ValidateAccounts
+                            .Tee(transferRequest => _logger.LogInformation("Accounts validated"))
+                            .Bind(_transferService.CheckSufficentFunds)
+                            .Bind(_transferService.RingfenceSourceAccount)
+                            .Bind(_transferService.TransferRingfencedAmount)
+                            .Merge(Ok, s => (ActionResult)BadRequest(s));
+            return func
                 .Invoke(request);
         }
     }

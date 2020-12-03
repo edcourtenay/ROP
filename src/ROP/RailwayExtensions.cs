@@ -4,119 +4,119 @@ namespace ROP
 {
     public static class RailwayExtensions
     {
-        public static Result<TB, TC> Bind<TA, TB, TC>(this Result<TA, TC> twoTrackInput,
-            Func<TA, Result<TB, TC>> switchFunction)
+        public static Result<TSuccessOut, TFailure> Bind<TSuccessIn, TSuccessOut, TFailure>(this Result<TSuccessIn, TFailure> twoTrackInput,
+            Func<TSuccessIn, Result<TSuccessOut, TFailure>> switchFunction)
         {
             return twoTrackInput switch
             {
-                Result<TA, TC>.Success success => switchFunction(success),
-                Result<TA, TC>.Failure failure => new Result<TB, TC>.Failure(failure),
+                Result<TSuccessIn, TFailure>.Success success => switchFunction(success),
+                Result<TSuccessIn, TFailure>.Failure failure => new Result<TSuccessOut, TFailure>.Failure(failure),
                 _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
             };
         }
 
-        public static Func<TA, Result<TC, TD>> Bind<TA, TB, TC, TD>(this Func<TA, Result<TB, TD>> twoTrackInputFunction,
-            Func<TB, Result<TC, TD>> switchFunction)
+        public static Func<TInput, Result<TSuccessOut, TFailure>> Bind<TInput, TSuccessIn, TSuccessOut, TFailure>(this Func<TInput, Result<TSuccessIn, TFailure>> twoTrackInputFunction,
+            Func<TSuccessIn, Result<TSuccessOut, TFailure>> switchFunction)
         {
-            return input => twoTrackInputFunction.Invoke(input).Bind(switchFunction);
+            return input => twoTrackInputFunction(input).Bind(switchFunction);
         }
 
-        public static Result<TA, TB> Lift<TA, TB>(this TA input)
+        public static Result<TSuccess, TFailure> Lift<TSuccess, TFailure>(this TSuccess input)
         {
-            return input.Switch<TA, TA, TB>(x => x);
+            return input.Switch<TSuccess, TSuccess, TFailure>(x => x);
         }
 
-        public static Result<TB, TC> Map<TA, TB, TC>(this Result<TA, TC> twoTrackInput, Func<TA, TB> oneTrackFunction)
+        public static Result<TSuccessOut, TFailure> Map<TSuccessIn, TSuccessOut, TFailure>(this Result<TSuccessIn, TFailure> twoTrackInput, Func<TSuccessIn, TSuccessOut> oneTrackFunction)
         {
             return twoTrackInput switch
             {
-                Result<TA, TC>.Success success => new Result<TB, TC>.Success(oneTrackFunction.Invoke(success)),
-                Result<TA, TC>.Failure failure => new Result<TB, TC>.Failure(failure),
+                Result<TSuccessIn, TFailure>.Success success => new Result<TSuccessOut, TFailure>.Success(oneTrackFunction(success)),
+                Result<TSuccessIn, TFailure>.Failure failure => new Result<TSuccessOut, TFailure>.Failure(failure),
                 _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
             };
         }
 
-        public static Func<TA, Result<TC, TD>> Map<TA, TB, TC, TD>(this Func<TA, Result<TB, TD>> twoTrackInputFunction,
-            Func<TB, TC> oneTrackFunction)
+        public static Func<TInput, Result<TSuccessOut, TFailure>> Map<TInput, TSuccessIn, TSuccessOut, TFailure>(this Func<TInput, Result<TSuccessIn, TFailure>> twoTrackInputFunction,
+            Func<TSuccessIn, TSuccessOut> oneTrackFunction)
         {
-            return input => twoTrackInputFunction.Invoke(input).Map(oneTrackFunction);
+            return input => twoTrackInputFunction(input).Map(oneTrackFunction);
         }
 
-        public static Result<TB, TC> Switch<TA, TB, TC>(this TA input, Func<TA, TB> oneTrackFunction)
+        public static Result<TSuccess, TFailure> Switch<TInput, TSuccess, TFailure>(this TInput input, Func<TInput, TSuccess> oneTrackFunction)
         {
-            return new Result<TB, TC>.Success(oneTrackFunction.Invoke(input));
+            return new Result<TSuccess, TFailure>.Success(oneTrackFunction(input));
+        }
+    
+        public static Func<TInput, Result<TSuccess, TFailure>> Switch<TInput, TSuccess, TFailure>(this Func<TInput, TSuccess> func)
+        {
+            return input => input.Switch<TInput, TSuccess, TFailure>(func);
         }
 
-        public static Func<TA, Result<TB, TC>> Switch<TA, TB, TC>(this Func<TA, TB> func)
+        public static Result<TSuccess, TFailure> Tee<TSuccess, TFailure>(this Result<TSuccess, TFailure> input, Action<TSuccess> teeAction)
         {
-            return input => input.Switch<TA, TB, TC>(func);
-        }
-
-        public static Result<TA, TB> Tee<TA, TB>(this Result<TA, TB> input, Action<TA> teeAction)
-        {
-            if (input is Result<TA, TB>.Success success)
+            if (input is Result<TSuccess, TFailure>.Success success)
             {
-                teeAction.Invoke(success);
+                teeAction(success);
             }
 
             return input;
         }
 
-        public static Func<TA, Result<TB, TC>> Tee<TA, TB, TC>(this Func<TA, Result<TB, TC>> result,
-            Action<TB> teeAction)
+        public static Func<TInput, Result<TSuccess, TFailure>> Tee<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> result,
+            Action<TSuccess> teeAction)
         {
-            return input => result.Invoke(input).Tee(teeAction);
+            return input => result(input).Tee(teeAction);
         }
 
-        public static Result<TA, TB> TeeFailure<TA, TB>(this Result<TA, TB> input, Action<TB> teeAction)
+        public static Result<TSuccess, TFailure> TeeFailure<TSuccess, TFailure>(this Result<TSuccess, TFailure> input, Action<TFailure> teeAction)
         {
-            if (input is Result<TA, TB>.Failure failure)
+            if (input is Result<TSuccess, TFailure>.Failure failure)
             {
-                teeAction.Invoke(failure);
+                teeAction(failure);
             }
 
             return input;
         }
 
-        public static Func<TA, Result<TB, TC>> TeeFailure<TA, TB, TC>(this Func<TA, Result<TB, TC>> result,
-            Action<TC> teeAction)
+        public static Func<TInput, Result<TSuccess, TFailure>> TeeFailure<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> result,
+            Action<TFailure> teeAction)
         {
-            return input => result.Invoke(input).TeeFailure(teeAction);
+            return input => result(input).TeeFailure(teeAction);
         }
 
-        public static void Handle<TA, TB>(this Result<TA, TB> twoTrackInput, Action<TA> onSuccess, Action<TB> onFailure = null)
+        public static void Handle<TSuccess, TFailure>(this Result<TSuccess, TFailure> twoTrackInput, Action<TSuccess> onSuccess, Action<TFailure> onFailure = null)
         {
             switch (twoTrackInput)
             {
-                case Result<TA, TB>.Success success:
+                case Result<TSuccess, TFailure>.Success success:
                     onSuccess(success);
                     break;
-                case Result<TA, TB>.Failure failure:
-                    onFailure?.Invoke(failure);
+                case Result<TSuccess, TFailure>.Failure failure when onFailure != null:
+                    onFailure(failure);
                     break;
             }
         }
 
-        public static Action<TA> Handle<TA, TB, TC>(this Func<TA, Result<TB, TC>> twoTrackInputFunction, Action<TB> onSuccess, Action<TC> onFailure = null)
+        public static Action<TInput> Handle<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> twoTrackInputFunction, Action<TSuccess> onSuccess, Action<TFailure> onFailure = null)
         {
-            return input => twoTrackInputFunction.Invoke(input).Handle(onSuccess, onFailure);
+            return input => twoTrackInputFunction(input).Handle(onSuccess, onFailure);
         }
 
-        public static TC Merge<TA, TB, TC>(this Result<TA, TB> twoTrackInput, Func<TA, TC> successFunc,
-            Func<TB, TC> failureFunc)
+        public static TOutput Merge<TSuccess, TFailure, TOutput>(this Result<TSuccess, TFailure> twoTrackInput, Func<TSuccess, TOutput> successFunc,
+            Func<TFailure, TOutput> failureFunc)
         {
             return twoTrackInput switch
             {
-                Result<TA, TB>.Success success => successFunc(success),
-                Result<TA, TB>.Failure failure => failureFunc(failure),
+                Result<TSuccess, TFailure>.Success success => successFunc(success),
+                Result<TSuccess, TFailure>.Failure failure => failureFunc(failure),
                 _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
             };
         }
 
-        public static Func<TA, TD> Merge<TA, TB, TC, TD>(this Func<TA, Result<TB, TC>> twoTrackInputFunction,
-            Func<TB, TD> successFunc, Func<TC, TD> failureFunc)
+        public static Func<TInput, TOutput> Merge<TInput, TSuccess, TFailure, TOutput>(this Func<TInput, Result<TSuccess, TFailure>> twoTrackInputFunction,
+            Func<TSuccess, TOutput> successFunc, Func<TFailure, TOutput> failureFunc)
         {
-            return input => twoTrackInputFunction.Invoke(input).Merge(successFunc, failureFunc);
+            return input => twoTrackInputFunction(input).Merge(successFunc, failureFunc);
         }
     }
 }
