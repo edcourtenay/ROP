@@ -84,7 +84,7 @@ namespace ROP
             return input => result(input).TeeFailure(teeAction);
         }
 
-        public static void Handle<TSuccess, TFailure>(this Result<TSuccess, TFailure> twoTrackInput, Action<TSuccess> onSuccess, Action<TFailure> onFailure = null)
+        public static void Handle<TSuccess, TFailure>(this Result<TSuccess, TFailure> twoTrackInput, Action<TSuccess> onSuccess, Action<TFailure>? onFailure = null)
         {
             switch (twoTrackInput)
             {
@@ -97,7 +97,7 @@ namespace ROP
             }
         }
 
-        public static Action<TInput> Handle<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> twoTrackInputFunction, Action<TSuccess> onSuccess, Action<TFailure> onFailure = null)
+        public static Action<TInput> Handle<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> twoTrackInputFunction, Action<TSuccess> onSuccess, Action<TFailure>? onFailure = null)
         {
             return input => twoTrackInputFunction(input).Handle(onSuccess, onFailure);
         }

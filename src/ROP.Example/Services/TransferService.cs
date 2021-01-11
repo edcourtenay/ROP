@@ -12,7 +12,7 @@ namespace ROP.Example.Services
             _accountService = accountService;
         }
 
-        public Func<TransferRequest, Result<TransferRequest, string>> CheckSufficentFunds =>
+        public Func<TransferRequest, Result<TransferRequest, string>> CheckSufficientFunds =>
             request =>
             {
                 var accountBalance = _accountService.GetAccountBalance(request.AccountFrom);
@@ -38,15 +38,16 @@ namespace ROP.Example.Services
         public Func<RingfencedTransferRequest, Result<TransferResult, string>> TransferRingfencedAmount =>
             request =>
             {
-                if (!_accountService.TransferFunds(request.AccountFrom, request.AccountTo, request.TransferAmount))
+                var (accountFrom, accountTo, transferAmount, reference, ringfenceReference) = request;
+                if (!_accountService.TransferFunds(accountFrom, accountTo, transferAmount))
                 {
-                    return new Result<TransferResult, string>.Failure($"Network failure while attempting to fulfill ringfence {request.RingfenceReference} ");
+                    return new Result<TransferResult, string>.Failure($"Network failure while attempting to fulfill ringfence {ringfenceReference} ");
                 }
 
-                var transferResult = new TransferResult(request.AccountFrom, request.AccountTo, request.TransferAmount,
-                    request.Reference, request.RingfenceReference,
-                    _accountService.GetAccountBalance(request.AccountFrom),
-                    _accountService.GetAccountBalance(request.AccountTo));
+                var transferResult = new TransferResult(accountFrom, accountTo, transferAmount,
+                    reference, ringfenceReference,
+                    _accountService.GetAccountBalance(accountFrom),
+                    _accountService.GetAccountBalance(accountTo));
 
                 return new Result<TransferResult, string>.Success(transferResult);
             };

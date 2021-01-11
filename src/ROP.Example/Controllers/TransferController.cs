@@ -26,7 +26,7 @@ namespace ROP.Example.Controllers
         {
             var func = _validationService.ValidateAccounts
                             .Tee(transferRequest => _logger.LogInformation("Accounts validated"))
-                            .Bind(_transferService.CheckSufficentFunds)
+                            .Bind(_transferService.CheckSufficientFunds)
                             .Bind(_transferService.RingfenceSourceAccount)
                             .Bind(_transferService.TransferRingfencedAmount)
                             .Merge(Ok, s => (ActionResult)BadRequest(s));
