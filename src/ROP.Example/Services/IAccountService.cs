@@ -1,9 +1,8 @@
-﻿namespace ROP.Example.Services
+﻿namespace ROP.Example.Services;
+
+public interface IAccountService
 {
-    public interface IAccountService
-    {
-        bool AccountExists(string requestAccountFrom);
-        decimal GetAccountBalance(string accountId);
-        bool TransferFunds(string fromAccountId, string toAccountId, decimal amount);
-    }
+    bool AccountExists(string requestAccountFrom);
+    decimal GetAccountBalance(string accountId);
+    bool TransferFunds(string fromAccountId, string toAccountId, decimal amount);
 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using ROP.Example.Models;
 
-namespace ROP.Example.Services
+namespace ROP.Example.Services;
+
+public interface IValidationService
 {
-    public interface IValidationService
-    {
-        Func<TransferRequest, Result<TransferRequest, string>> ValidateAccounts { get; }
-    }
+    Func<TransferRequest, Result<TransferRequest, string>> ValidateAccounts { get; }
 }
