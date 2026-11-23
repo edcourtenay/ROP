@@ -5,48 +5,48 @@ namespace ROP;
 
 public static class RailwayAsyncExtensions
 {
-    public static Func<TA, Task<Result<TC, TD>>> BindAsync<TA, TB, TC, TD>(
-        this Func<TA, Task<Result<TB, TD>>> left, Func<TB, Task<Result<TC, TD>>> right)
+    public static Func<TInput, Task<Result<TSuccessOut, TFailure>>> BindAsync<TInput, TSuccessIn, TSuccessOut, TFailure>(
+        this Func<TInput, Task<Result<TSuccessIn, TFailure>>> left, Func<TSuccessIn, Task<Result<TSuccessOut, TFailure>>> right)
     {
         return input => left.Invoke(input).BindAsync(right);
     }
 
-    public static Task<Result<TB, TC>> BindAsync<TA, TB, TC>(this Task<Result<TA, TC>> twoTrackInput,
-        Func<TA, Task<Result<TB, TC>>> switchFunction)
+    public static Task<Result<TSuccessOut, TFailure>> BindAsync<TSuccessIn, TSuccessOut, TFailure>(this Task<Result<TSuccessIn, TFailure>> twoTrackInput,
+        Func<TSuccessIn, Task<Result<TSuccessOut, TFailure>>> switchFunction)
     {
-        return WhenSuccessful(twoTrackInput, switchFunction);
+        return twoTrackInput.WhenSuccessful(switchFunction);
     }
 
-    public static Func<TA, Task<Result<TC, TD>>> BindAsync<TA, TB, TC, TD>(this Func<TA, Result<TB, TD>> left,
-        Func<TB, Task<Result<TC, TD>>> right)
+    public static Func<TInput, Task<Result<TSuccessOut, TFailure>>> BindAsync<TInput, TSuccessIn, TSuccessOut, TFailure>(this Func<TInput, Result<TSuccessIn, TFailure>> left,
+        Func<TSuccessIn, Task<Result<TSuccessOut, TFailure>>> right)
     {
         return input => left.Invoke(input).BindAsync(right);
     }
 
 
-    public static Task<Result<TB, TC>> BindAsync<TA, TB, TC>(this Result<TA, TC> twoTrackInput,
-        Func<TA, Task<Result<TB, TC>>> asyncSwitchFunction)
+    public static Task<Result<TSuccessOut, TFailure>> BindAsync<TSuccessIn, TSuccessOut, TFailure>(this Result<TSuccessIn, TFailure> twoTrackInput,
+        Func<TSuccessIn, Task<Result<TSuccessOut, TFailure>>> asyncSwitchFunction)
     {
         return twoTrackInput.ToAsync().BindAsync(asyncSwitchFunction);
     }
 
-    public static Func<TA, Task<Result<TB, TC>>> ToAsync<TA, TB, TC>(this Func<TA, Result<TB, TC>> twoTrackFunction)
+    public static Func<TInput, Task<Result<TSuccess, TFailure>>> ToAsync<TInput, TSuccess, TFailure>(this Func<TInput, Result<TSuccess, TFailure>> twoTrackFunction)
     {
         return input => twoTrackFunction.Invoke(input).ToAsync();
     }
 
-    public static Task<Result<TA, TB>> ToAsync<TA, TB>(this Result<TA, TB> twoTrackInput)
+    public static Task<Result<TSuccess, TFailure>> ToAsync<TSuccess, TFailure>(this Result<TSuccess, TFailure> twoTrackInput)
     {
         return Task.FromResult(twoTrackInput);
     }
 
-    private static async Task<Result<TS, TF>> WhenSuccessful<TA, TS, TF>(this Task<Result<TA, TF>> twoTrackInput,
-        Func<TA, Task<Result<TS, TF>>> func)
+    private static async Task<Result<TSuccessOut, TFailure>> WhenSuccessful<TSuccessIn, TSuccessOut, TFailure>(this Task<Result<TSuccessIn, TFailure>> twoTrackInput,
+        Func<TSuccessIn, Task<Result<TSuccessOut, TFailure>>> func)
     {
         return await twoTrackInput switch
         {
-            TA success => await func(success),
-            TF failure => failure,
+            TSuccessIn success => await func(success),
+            TFailure failure => failure,
             _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput))
         };
     }
