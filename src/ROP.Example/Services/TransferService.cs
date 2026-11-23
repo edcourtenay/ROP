@@ -1,4 +1,5 @@
 ﻿using System;
+
 using ROP.Example.Models;
 
 namespace ROP.Example.Services;
@@ -25,7 +26,7 @@ public class TransferService : ITransferService
     public Func<TransferRequest, Result<RingfencedTransferRequest, string>> RingfenceSourceAccount =>
         request =>
         {
-            if (request.AccountFrom.StartsWith("8"))
+            if (request.AccountFrom.StartsWith('8'))
             {
                 return $"Service timed out while attempting to ringfence {request.TransferAmount} from account {request.AccountFrom}";
             }

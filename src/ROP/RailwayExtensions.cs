@@ -91,8 +91,8 @@ public static class RailwayExtensions
             case TSuccess success:
                 onSuccess(success);
                 break;
-            case TFailure failure when onFailure != null:
-                onFailure(failure);
+            case TFailure failure:
+                onFailure?.Invoke(failure);
                 break;
         }
     }

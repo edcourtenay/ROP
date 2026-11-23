@@ -1,5 +1,7 @@
 ﻿using System;
+
 using Microsoft.Extensions.Logging;
+
 using ROP.Example.Models;
 
 namespace ROP.Example.Services;

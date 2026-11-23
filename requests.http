@@ -8,7 +8,8 @@ Accept: application/json
 {
     "AccountFrom": "12345678",
     "AccountTo": "12445690",
-    "TransferAmount": 56.0
+    "TransferAmount": 56.0,
+    "Reference": "Test transfer"
 }
 
 

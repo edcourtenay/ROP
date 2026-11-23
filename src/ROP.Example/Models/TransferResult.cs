@@ -7,6 +7,4 @@ public record TransferResult(
     string Reference,
     string RingfenceReference,
     decimal FromAccountBalance,
-    decimal ToAccountBalance)
-{
-}
+    decimal ToAccountBalance);
