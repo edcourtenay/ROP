@@ -31,6 +31,7 @@ public class TransferController : ControllerBase
             .Bind(_transferService.RingfenceSourceAccount)
             .Bind(_transferService.TransferRingfencedAmount)
             .Merge(Ok, s => (ActionResult)BadRequest(s));
+
         return func
             .Invoke(request);
     }
