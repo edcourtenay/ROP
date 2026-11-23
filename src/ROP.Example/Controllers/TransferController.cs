@@ -26,11 +26,11 @@ public class TransferController : ControllerBase
     public ActionResult Post([FromBody] TransferRequest request)
     {
         var func = _validationService.ValidateAccounts
-            .Tee(transferRequest => _logger.LogInformation("Accounts validated"))
+            .Tee(_ => _logger.LogInformation("Accounts validated"))
             .Bind(_transferService.CheckSufficientFunds)
             .Bind(_transferService.RingfenceSourceAccount)
             .Bind(_transferService.TransferRingfencedAmount)
-            .Merge(Ok, s => (ActionResult)BadRequest(s));
+            .Merge(Ok, ActionResult (error) => BadRequest(error.ToString()));
 
         return func
             .Invoke(request);

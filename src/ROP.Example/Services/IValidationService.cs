@@ -6,5 +6,5 @@ namespace ROP.Example.Services;
 
 public interface IValidationService
 {
-    Func<TransferRequest, Result<TransferRequest, string>> ValidateAccounts { get; }
+    Func<TransferRequest, Result<TransferRequest, TransferError>> ValidateAccounts { get; }
 }

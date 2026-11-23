@@ -17,17 +17,17 @@ public class ValidationService : IValidationService
         _logger = logger;
     }
 
-    private Func<TransferRequest, Result<TransferRequest, string>> ValidateFromAccount =>
+    private Func<TransferRequest, Result<TransferRequest, TransferError>> ValidateFromAccount =>
         request => _accountService.AccountExists(request.AccountFrom)
             ? request
-            : $"AccountFrom {request.AccountFrom} not recognised";
+            : new TransferError.AccountNotRecognised("AccountFrom", request.AccountFrom);
 
-    private Func<TransferRequest, Result<TransferRequest, string>> ValidateToAccount =>
+    private Func<TransferRequest, Result<TransferRequest, TransferError>> ValidateToAccount =>
         request => _accountService.AccountExists(request.AccountTo)
             ? request
-            : $"AccountTo {request.AccountTo} not recognised";
+            : new TransferError.AccountNotRecognised("AccountTo", request.AccountTo);
 
-    public Func<TransferRequest, Result<TransferRequest, string>> ValidateAccounts =>
+    public Func<TransferRequest, Result<TransferRequest, TransferError>> ValidateAccounts =>
         ValidateFromAccount
             .Bind(ValidateToAccount);
 }
