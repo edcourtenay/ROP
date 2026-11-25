@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -8,17 +7,9 @@ using ROP.Example.Services;
 
 namespace ROP.Example;
 
-public class Startup
+public static class Startup
 {
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    public IConfiguration Configuration { get; }
-
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
+    public static void ConfigureServices(this IServiceCollection services)
     {
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITransferService, TransferService>();
@@ -28,15 +19,18 @@ public class Startup
         {
             options.EnableEndpointRouting = false;
         });
+
+        services.AddOpenApi();
     }
 
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public static WebApplication Configure(this WebApplication app)
     {
-        if (env.IsDevelopment())
+        if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.MapOpenApi();
         }
         else
         {
@@ -46,5 +40,7 @@ public class Startup
 
         //app.UseHttpsRedirection();
         app.UseMvc();
+
+        return app;
     }
 }

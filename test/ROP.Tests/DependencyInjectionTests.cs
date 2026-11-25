@@ -10,7 +10,7 @@ public class DependencyInjectionTests
     [Fact]
     public void ExampleServicesAreScopedAndResolvable()
     {
-        using var host = Program.CreateWebHostBuilder(new string[0]).Build();
+        using var host = Program.CreateApplication(new string[0]);
         using var scope = host.Services.CreateScope();
         using var otherScope = host.Services.CreateScope();
 

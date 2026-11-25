@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace ROP.Example;
 
@@ -7,10 +6,17 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        CreateWebHostBuilder(args).Build().Run();
+        using var app = CreateApplication(args);
+        app.Run();
     }
 
-    public static IHostBuilder CreateWebHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+    public static WebApplication CreateApplication(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
+        builder.Services.ConfigureServices();
+
+        return builder
+            .Build()
+            .Configure();
+    }
 }
