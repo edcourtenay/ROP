@@ -13,7 +13,11 @@ dotnet build ROP.sln
 dotnet test ROP.sln
 ```
 
-Reference `src/ROP/ROP.csproj` from your project and import the `ROP` namespace.
+Add the [ROP NuGet package](https://www.nuget.org/packages/ROP) to your project, or reference `src/ROP/ROP.csproj` directly, and import the `ROP` namespace:
+
+```shell
+dotnet add package ROP
+```
 
 ## Usage
 
@@ -56,3 +60,21 @@ Most operations also have overloads for composing result-producing functions bef
 - `src/ROP` — the result type and railway composition extensions.
 - `src/ROP.Example` — an ASP.NET Core transfer API demonstrating validation, side effects, chaining and merging results into HTTP responses. Run it with `dotnet run --project src/ROP.Example`; see `requests.http` for sample requests.
 - `test/ROP.Tests` — tests for the library and example integration.
+
+## Publishing
+
+Packages are versioned from git tags using [MinVer](https://github.com/adamralph/minver): a tag such as `v1.2.3` produces version `1.2.3`, while untagged builds get a prerelease version.
+
+To release:
+
+1. Tag the commit and push the tag:
+
+   ```shell
+   git tag v1.2.3
+   git push origin v1.2.3
+   ```
+
+2. The `Publish` workflow builds, tests and packs the library, then pauses on the `release` environment for approval.
+3. Approve the deployment, and the package is pushed to nuget.org using [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (a short-lived, OIDC-issued API key — no stored secret).
+
+The workflow can also be run manually from the Actions tab (`workflow_dispatch`).

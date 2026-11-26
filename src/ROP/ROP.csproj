@@ -1,11 +1,28 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-
-
   <PropertyGroup>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>ROP</PackageId>
+    <Description>A C# library for composing operations that can succeed or fail, inspired by Railway Oriented Programming.</Description>
+    <PackageTags>railway;railway-oriented-programming;result;functional;either;rop</PackageTags>
+    <Authors>Ed Courtenay</Authors>
+    <PackageProjectUrl>https://github.com/edcourtenay/ROP</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/edcourtenay/ROP</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <IncludeSymbols>true</IncludeSymbols>
-    <IncludeSource>true</IncludeSource>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="all" />
+    <PackageReference Include="MinVer" Version="8.0.0" PrivateAssets="all" />
+  </ItemGroup>
 
 </Project>
