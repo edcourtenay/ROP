@@ -50,12 +50,13 @@ For `7`, the result is `14`. For a value below `5`, `CheckMaximum` and `Map` are
 
 - `Bind` chains a success value to an operation returning another `Result` with the same failure type.
 - `Map` transforms a success value with a function that does not return a `Result`.
+- `MapFailure` transforms a failure value; `BindFailure` chains a failure to an operation that may replace the failure or recover to a success. Both may change the failure type.
 - `Lift` wraps a value as a success; `Switch` applies a function and wraps its output as a success.
 - `Tee` and `TeeFailure` perform side effects on the respective track and return the original result.
 - `Handle` invokes an action for the applicable track; its failure action is optional. `Merge` maps both tracks to a common output type.
 - `BindAsync` chains asynchronous operations returning `Task<Result<...>>`; `ToAsync` wraps a synchronous result or result-producing function in a task.
 
-Most operations also have overloads for composing result-producing functions before supplying their input. These helpers do not convert thrown exceptions into failure values.
+Every operation also has an overload for composing result-producing functions before supplying their input. These helpers do not convert thrown exceptions into failure values.
 
 ## Solution projects
 

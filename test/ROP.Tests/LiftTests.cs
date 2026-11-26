@@ -1,3 +1,5 @@
+using System;
+
 namespace ROP.Tests;
 
 public class LiftTests
@@ -10,5 +12,15 @@ public class LiftTests
         var result = expected.Lift<int, string>();
 
         result.Should().BeEquivalentTo(new { Value = expected });
+    }
+
+    [Fact]
+    public void Functional_lift_should_wrap_output_as_success()
+    {
+        Func<int, int> doubleValue = x => x * 2;
+
+        var result = doubleValue.Lift<int, int, string>()(5);
+
+        result.Should().BeEquivalentTo(new { Value = 10 });
     }
 }

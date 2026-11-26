@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ROP.Example\ROP.Example.csproj" />
-    <ProjectReference Include="..\..\src\ROP\ROP.csproj" />
   </ItemGroup>
 
 </Project>

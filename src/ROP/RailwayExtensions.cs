@@ -43,6 +43,44 @@ public static class RailwayExtensions
         return input => twoTrackInputFunction(input).Bind(switchFunction);
     }
 
+    /// <summary>Applies a result-producing function to a failure, or passes a success through unchanged.</summary>
+    /// <remarks>Because the function returns a result, a failure can be recovered to a success.</remarks>
+    /// <typeparam name="TSuccess">The success type.</typeparam>
+    /// <typeparam name="TFailureIn">The input failure type.</typeparam>
+    /// <typeparam name="TFailureOut">The output failure type.</typeparam>
+    /// <param name="twoTrackInput">The result to bind.</param>
+    /// <param name="switchFunction">The function invoked for a failure.</param>
+    /// <returns>The function's result on failure, or the original success.</returns>
+    /// <example><code>Result&lt;int, string&gt; result = "invalid";
+    /// var recovered = result.BindFailure(error =&gt; (Result&lt;int, string&gt;)(-1));</code></example>
+    public static Result<TSuccess, TFailureOut> BindFailure<TSuccess, TFailureIn, TFailureOut>(this Result<TSuccess, TFailureIn> twoTrackInput,
+        Func<TFailureIn, Result<TSuccess, TFailureOut>> switchFunction)
+    {
+        return twoTrackInput switch
+        {
+            TSuccess success => success,
+            TFailureIn failure => switchFunction(failure),
+            _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput), twoTrackInput, null)
+        };
+    }
+
+    /// <summary>Composes a result-producing function with another operation that runs only on failure.</summary>
+    /// <typeparam name="TInput">The input type of the composed function.</typeparam>
+    /// <typeparam name="TSuccess">The success type.</typeparam>
+    /// <typeparam name="TFailureIn">The first function's failure type.</typeparam>
+    /// <typeparam name="TFailureOut">The second function's failure type.</typeparam>
+    /// <param name="twoTrackInputFunction">The first result-producing function.</param>
+    /// <param name="switchFunction">The operation invoked on failure.</param>
+    /// <returns>A function that runs the operations in sequence, passing successes through.</returns>
+    /// <example><code>Func&lt;int, Result&lt;int, string&gt;&gt; first = x =&gt; "invalid";
+    /// var pipeline = first.BindFailure(error =&gt; (Result&lt;int, string&gt;)(-1));
+    /// var result = pipeline(5);</code></example>
+    public static Func<TInput, Result<TSuccess, TFailureOut>> BindFailure<TInput, TSuccess, TFailureIn, TFailureOut>(this Func<TInput, Result<TSuccess, TFailureIn>> twoTrackInputFunction,
+        Func<TFailureIn, Result<TSuccess, TFailureOut>> switchFunction)
+    {
+        return input => twoTrackInputFunction(input).BindFailure(switchFunction);
+    }
+
     /// <summary>Wraps a value on the success track.</summary>
     /// <typeparam name="TSuccess">The value's type.</typeparam>
     /// <typeparam name="TFailure">The failure type of the result.</typeparam>
@@ -52,6 +90,20 @@ public static class RailwayExtensions
     public static Result<TSuccess, TFailure> Lift<TSuccess, TFailure>(this TSuccess input)
     {
         return input.Switch<TSuccess, TSuccess, TFailure>(x => x);
+    }
+
+    /// <summary>Converts a single-track function into one that wraps each output as a success.</summary>
+    /// <typeparam name="TInput">The function's input type.</typeparam>
+    /// <typeparam name="TSuccess">The function's output and result success type.</typeparam>
+    /// <typeparam name="TFailure">The failure type of the result.</typeparam>
+    /// <param name="func">The single-track function to wrap.</param>
+    /// <returns>A function that returns a success result for each output.</returns>
+    /// <example><code>Func&lt;int, int&gt; doubleValue = x =&gt; x * 2;
+    /// var lifted = doubleValue.Lift&lt;int, int, string&gt;();
+    /// var result = lifted(5);</code></example>
+    public static Func<TInput, Result<TSuccess, TFailure>> Lift<TInput, TSuccess, TFailure>(this Func<TInput, TSuccess> func)
+    {
+        return input => func(input).Lift<TSuccess, TFailure>();
     }
 
     /// <summary>Transforms a success value with a single-track function, passing failures through unchanged.</summary>
@@ -88,6 +140,42 @@ public static class RailwayExtensions
         Func<TSuccessIn, TSuccessOut> oneTrackFunction)
     {
         return input => twoTrackInputFunction(input).Map(oneTrackFunction);
+    }
+
+    /// <summary>Transforms a failure value with a single-track function, passing successes through unchanged.</summary>
+    /// <typeparam name="TSuccess">The success type.</typeparam>
+    /// <typeparam name="TFailureIn">The input failure type.</typeparam>
+    /// <typeparam name="TFailureOut">The transformed failure type.</typeparam>
+    /// <param name="twoTrackInput">The result to transform.</param>
+    /// <param name="oneTrackFunction">The function invoked for a failure.</param>
+    /// <returns>A result containing the original success or the transformed failure.</returns>
+    /// <example><code>Result&lt;int, string&gt; result = "invalid";
+    /// var wrapped = result.MapFailure(error =&gt; error.Length);</code></example>
+    public static Result<TSuccess, TFailureOut> MapFailure<TSuccess, TFailureIn, TFailureOut>(this Result<TSuccess, TFailureIn> twoTrackInput, Func<TFailureIn, TFailureOut> oneTrackFunction)
+    {
+        return twoTrackInput switch
+        {
+            TSuccess success => success,
+            TFailureIn failure => oneTrackFunction(failure),
+            _ => throw new ArgumentOutOfRangeException(nameof(twoTrackInput), twoTrackInput, null)
+        };
+    }
+
+    /// <summary>Composes a result-producing function with a transformation of its failure value.</summary>
+    /// <typeparam name="TInput">The input type of the composed function.</typeparam>
+    /// <typeparam name="TSuccess">The success type.</typeparam>
+    /// <typeparam name="TFailureIn">The original failure type.</typeparam>
+    /// <typeparam name="TFailureOut">The transformed failure type.</typeparam>
+    /// <param name="twoTrackInputFunction">The result-producing function.</param>
+    /// <param name="oneTrackFunction">The transformation invoked on failure.</param>
+    /// <returns>A function that transforms failures and passes successes through.</returns>
+    /// <example><code>Func&lt;int, Result&lt;int, string&gt;&gt; first = x =&gt; "invalid";
+    /// var pipeline = first.MapFailure(error =&gt; error.Length);
+    /// var result = pipeline(5);</code></example>
+    public static Func<TInput, Result<TSuccess, TFailureOut>> MapFailure<TInput, TSuccess, TFailureIn, TFailureOut>(this Func<TInput, Result<TSuccess, TFailureIn>> twoTrackInputFunction,
+        Func<TFailureIn, TFailureOut> oneTrackFunction)
+    {
+        return input => twoTrackInputFunction(input).MapFailure(oneTrackFunction);
     }
 
     /// <summary>Applies a single-track function to a value and wraps its output as a success.</summary>
@@ -127,9 +215,15 @@ public static class RailwayExtensions
     /// var unchanged = result.Tee(x =&gt; Console.WriteLine(x));</code></example>
     public static Result<TSuccess, TFailure> Tee<TSuccess, TFailure>(this Result<TSuccess, TFailure> input, Action<TSuccess> teeAction)
     {
-        if (input is TSuccess success)
+        switch (input)
         {
-            teeAction(success);
+            case TSuccess success:
+                teeAction(success);
+                break;
+            case TFailure:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(input), input, null);
         }
 
         return input;
@@ -161,9 +255,15 @@ public static class RailwayExtensions
     /// var unchanged = result.TeeFailure(error =&gt; Console.WriteLine(error));</code></example>
     public static Result<TSuccess, TFailure> TeeFailure<TSuccess, TFailure>(this Result<TSuccess, TFailure> input, Action<TFailure> teeAction)
     {
-        if (input is TFailure failure)
+        switch (input)
         {
-            teeAction(failure);
+            case TSuccess:
+                break;
+            case TFailure failure:
+                teeAction(failure);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(input), input, null);
         }
 
         return input;
@@ -203,6 +303,8 @@ public static class RailwayExtensions
             case TFailure failure:
                 onFailure?.Invoke(failure);
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(twoTrackInput), twoTrackInput, null);
         }
     }
 
