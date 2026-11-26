@@ -13,10 +13,10 @@ dotnet build ROP.sln
 dotnet test ROP.sln
 ```
 
-Add the [ROP NuGet package](https://www.nuget.org/packages/ROP) to your project, or reference `src/ROP/ROP.csproj` directly, and import the `ROP` namespace:
+Add the [EdCourtenay.ROP NuGet package](https://www.nuget.org/packages/EdCourtenay.ROP) to your project, or reference `src/ROP/ROP.csproj` directly, and import the `ROP` namespace:
 
 ```shell
-dotnet add package ROP
+dotnet add package EdCourtenay.ROP
 ```
 
 ## Usage
@@ -76,5 +76,3 @@ To release:
 
 2. The `Publish` workflow builds, tests and packs the library, then pauses on the `release` environment for approval.
 3. Approve the deployment, and the package is pushed to nuget.org using [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (a short-lived, OIDC-issued API key — no stored secret).
-
-The workflow can also be run manually from the Actions tab (`workflow_dispatch`).

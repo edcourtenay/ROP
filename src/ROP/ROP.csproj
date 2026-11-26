@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageId>ROP</PackageId>
+    <PackageId>EdCourtenay.ROP</PackageId>
     <Description>A C# library for composing operations that can succeed or fail, inspired by Railway Oriented Programming.</Description>
     <PackageTags>railway;railway-oriented-programming;result;functional;either;rop</PackageTags>
     <Authors>Ed Courtenay</Authors>
@@ -14,6 +14,7 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
   </PropertyGroup>
 
   <ItemGroup>
