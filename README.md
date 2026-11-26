@@ -58,9 +58,21 @@ For `7`, the result is `14`. For a value below `5`, `CheckMaximum` and `Map` are
 
 Every operation also has an overload for composing result-producing functions before supplying their input. These helpers do not convert thrown exceptions into failure values.
 
+### Analyzer
+
+The package ships an analyzer that reports `ROP0001` when `Result<TSuccess, TFailure>` is used with the same type for both tracks, because a value would then be indistinguishable from an error:
+
+```csharp
+Result<int, int> invalid = 1; // ROP0001
+```
+
+Its severity can be changed or the rule suppressed per project with `dotnet_diagnostic.ROP0001.severity` in `.editorconfig`.
+
 ## Solution projects
 
 - `src/ROP` — the result type and railway composition extensions.
+- `src/ROP.Analyzers` — the Roslyn analyzer enforcing distinct `Result` tracks, packed into the `ROP` package.
 - `src/ROP.Example` — an ASP.NET Core transfer API demonstrating validation, side effects, chaining and merging results into HTTP responses. Run it with `dotnet run --project src/ROP.Example`; see `requests.http` for sample requests.
 - `test/ROP.Tests` — tests for the library.
 - `test/ROP.Example.Tests` — tests for the example application.
+- `test/ROP.Analyzers.Tests` — tests for the analyzer.
