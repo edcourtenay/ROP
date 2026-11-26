@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <AssemblyName>EdCourtenay.ROP.Tests</AssemblyName>
+    <RootNamespace>EdCourtenay.ROP.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

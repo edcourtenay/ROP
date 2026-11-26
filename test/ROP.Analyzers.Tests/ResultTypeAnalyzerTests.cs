@@ -8,14 +8,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace ROP.Analyzers.Tests;
+namespace EdCourtenay.ROP.Analyzers.Tests;
 
 public class ResultTypeAnalyzerTests
 {
     [Fact]
     public async Task Reports_when_success_and_failure_types_are_the_same()
     {
-        var diagnostics = await Analyze("public class C { public ROP.Result<int, int> M() => throw new System.Exception(); }");
+        var diagnostics = await Analyze("public class C { public EdCourtenay.ROP.Result<int, int> M() => throw new System.Exception(); }");;
 
         var diagnostic = diagnostics.Should().ContainSingle().Subject;
         diagnostic.Id.Should().Be(ResultTypeAnalyzer.DiagnosticId);
@@ -24,7 +24,7 @@ public class ResultTypeAnalyzerTests
     [Fact]
     public async Task Does_not_report_when_the_types_differ()
     {
-        var diagnostics = await Analyze("public class C { public ROP.Result<int, string> M() => throw new System.Exception(); }");
+        var diagnostics = await Analyze("public class C { public EdCourtenay.ROP.Result<int, string> M() => throw new System.Exception(); }");
 
         diagnostics.Should().BeEmpty();
     }
@@ -44,11 +44,11 @@ public class ResultTypeAnalyzerTests
         var references = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!)
             .Split(Path.PathSeparator)
             .Select(path => (MetadataReference)MetadataReference.CreateFromFile(path))
-            .Append(MetadataReference.CreateFromFile(typeof(global::ROP.Result<,>).Assembly.Location));
+            .Append(MetadataReference.CreateFromFile(typeof(global::EdCourtenay.ROP.Result<,>).Assembly.Location));
 
         var compilation = CSharpCompilation.Create(
             "AnalyzerTests",
-            new[] { tree },
+            [tree],
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 

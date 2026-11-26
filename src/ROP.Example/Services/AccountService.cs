@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace ROP.Example.Services;
+namespace EdCourtenay.ROP.Example.Services;
 
 public class AccountService : IAccountService
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ROP;
+namespace EdCourtenay.ROP;
 
 /// <summary>
 /// Provides asynchronous composition and task adapters for two-track results.

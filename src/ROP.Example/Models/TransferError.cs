@@ -1,4 +1,4 @@
-namespace ROP.Example.Models;
+namespace EdCourtenay.ROP.Example.Models;
 
 public closed record TransferError
 {

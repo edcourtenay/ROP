@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using EdCourtenay.ROP.Example.Models;
+using EdCourtenay.ROP.Example.Services;
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using ROP.Example.Models;
-using ROP.Example.Services;
-
-namespace ROP.Example.Controllers;
+namespace EdCourtenay.ROP.Example.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

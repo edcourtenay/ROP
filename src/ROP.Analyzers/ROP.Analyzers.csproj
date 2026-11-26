@@ -4,6 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <AssemblyName>EdCourtenay.ROP.Analyzers</AssemblyName>
+    <RootNamespace>EdCourtenay.ROP.Analyzers</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

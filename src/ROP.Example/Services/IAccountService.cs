@@ -1,4 +1,4 @@
-﻿namespace ROP.Example.Services;
+﻿namespace EdCourtenay.ROP.Example.Services;
 
 public interface IAccountService
 {

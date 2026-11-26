@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ROP;
+namespace EdCourtenay.ROP;
 
 /// <summary>Provides synchronous operations for composing success and failure tracks.</summary>
 /// <remarks>Exceptions thrown by supplied functions and actions propagate to the caller; they are not converted to failure results.</remarks>

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace ROP.Tests;
+namespace EdCourtenay.ROP.Tests;
 
 public class BindTests
 {

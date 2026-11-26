@@ -1,10 +1,10 @@
 ﻿using System;
 
+using EdCourtenay.ROP.Example.Models;
+
 using Microsoft.Extensions.Logging;
 
-using ROP.Example.Models;
-
-namespace ROP.Example.Services;
+namespace EdCourtenay.ROP.Example.Services;
 
 public class ValidationService : IValidationService
 {

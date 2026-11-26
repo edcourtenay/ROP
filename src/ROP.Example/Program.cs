@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace ROP.Example;
+namespace EdCourtenay.ROP.Example;
 
 public class Program
 {

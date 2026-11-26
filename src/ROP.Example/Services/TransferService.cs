@@ -1,8 +1,8 @@
 ﻿using System;
 
-using ROP.Example.Models;
+using EdCourtenay.ROP.Example.Models;
 
-namespace ROP.Example.Services;
+namespace EdCourtenay.ROP.Example.Services;
 
 public class TransferService : ITransferService
 {

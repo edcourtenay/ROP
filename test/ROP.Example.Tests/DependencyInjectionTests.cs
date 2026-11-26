@@ -1,9 +1,8 @@
+using EdCourtenay.ROP.Example.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 
-using ROP.Example;
-using ROP.Example.Services;
-
-namespace ROP.Example.Tests;
+namespace EdCourtenay.ROP.Example.Tests;
 
 public class DependencyInjectionTests
 {

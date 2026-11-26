@@ -1,6 +1,6 @@
 using System;
 
-namespace ROP.Tests;
+namespace EdCourtenay.ROP.Tests;
 
 public class TeeFailureTests
 {

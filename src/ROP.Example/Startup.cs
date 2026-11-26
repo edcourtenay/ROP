@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
+﻿using EdCourtenay.ROP.Example.Services;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using ROP.Example.Services;
-
-namespace ROP.Example;
+namespace EdCourtenay.ROP.Example;
 
 public static class Startup
 {

@@ -1,4 +1,4 @@
-﻿namespace ROP.Example.Models;
+﻿namespace EdCourtenay.ROP.Example.Models;
 
 public record RingfencedTransferRequest(string AccountFrom, string AccountTo, decimal TransferAmount,
     string? Reference, string RingfenceReference)

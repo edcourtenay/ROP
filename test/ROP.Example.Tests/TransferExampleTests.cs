@@ -1,11 +1,11 @@
+using EdCourtenay.ROP.Example.Controllers;
+using EdCourtenay.ROP.Example.Models;
+using EdCourtenay.ROP.Example.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
 
-using ROP.Example.Controllers;
-using ROP.Example.Models;
-using ROP.Example.Services;
-
-namespace ROP.Example.Tests;
+namespace EdCourtenay.ROP.Example.Tests;
 
 public class TransferExampleTests
 {

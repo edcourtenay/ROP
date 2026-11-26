@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace ROP.Analyzers;
+namespace EdCourtenay.ROP.Analyzers;
 
 /// <summary>Reports <c>Result&lt;TSuccess, TFailure&gt;</c> uses where the success and failure types are the same.</summary>
 /// <remarks>A result whose two tracks share a type cannot tell a value apart from an error, so the analyzer reports such uses.</remarks>
@@ -16,7 +16,7 @@ public sealed class ResultTypeAnalyzer : DiagnosticAnalyzer
     public const string DiagnosticId = "ROP0001";
 
     private const string ResultTypeName = "Result";
-    private const string ResultNamespace = "ROP";
+    private const string ResultNamespace = "EdCourtenay.ROP";
     private const string ResultMetadataName = "Result`2";
 
     private static readonly DiagnosticDescriptor Rule = new(

@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ROP.Tests;
+namespace EdCourtenay.ROP.Tests;
 
 public class ToAsyncTests
 {
