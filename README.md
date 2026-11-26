@@ -15,7 +15,7 @@ dotnet build ROP.sln
 dotnet test ROP.sln
 ```
 
-Add the [EdCourtenay.ROP NuGet package](https://www.nuget.org/packages/EdCourtenay.ROP) to your project, or reference `src/ROP/ROP.csproj` directly, and import the `ROP` namespace:
+Add the [EdCourtenay.ROP NuGet package](https://www.nuget.org/packages/EdCourtenay.ROP) to your project, or reference `src/ROP/ROP.csproj` directly, and import the `EdCourtenay.ROP` namespace:
 
 ```shell
 dotnet add package EdCourtenay.ROP
@@ -27,7 +27,7 @@ Return either a success or a failure value from an operation, then chain operati
 
 ```csharp
 using System;
-using ROP;
+using EdCourtenay.ROP;
 
 Result<int, string> CheckMinimum(int value) =>
     value < 5 ? "Number too small" : value;

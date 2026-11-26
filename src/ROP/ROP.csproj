@@ -28,17 +28,20 @@
     <PackageReference Include="MinVer" Version="8.0.0" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\ROP.Analyzers\ROP.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_IncludeAnalyzerInPackage</TargetsForTfmSpecificContentInPackage>
   </PropertyGroup>
 
+  <!-- The analyzer is referenced as an analyzer by every project (see Directory.Build.targets). Its
+       output path is resolved directly so renaming the analyzer assembly cannot silently drop it. -->
   <Target Name="_IncludeAnalyzerInPackage" DependsOnTargets="ResolveProjectReferences">
+    <MSBuild Projects="$(MSBuildThisFileDirectory)..\ROP.Analyzers\ROP.Analyzers.csproj"
+             Targets="GetTargetPath"
+             Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="_AnalyzerAssemblyPath" />
+    </MSBuild>
     <ItemGroup>
-      <TfmSpecificPackageFile Include="@(Analyzer)" Condition="'%(Filename)' == 'ROP.Analyzers'" PackagePath="analyzers/dotnet/cs" />
+      <TfmSpecificPackageFile Include="@(_AnalyzerAssemblyPath)" PackagePath="analyzers/dotnet/cs" />
     </ItemGroup>
   </Target>
 

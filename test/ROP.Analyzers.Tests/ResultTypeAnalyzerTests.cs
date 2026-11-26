@@ -15,7 +15,7 @@ public class ResultTypeAnalyzerTests
     [Fact]
     public async Task Reports_when_success_and_failure_types_are_the_same()
     {
-        var diagnostics = await Analyze("public class C { public EdCourtenay.ROP.Result<int, int> M() => throw new System.Exception(); }");;
+        var diagnostics = await Analyze("public class C { public EdCourtenay.ROP.Result<int, int> M() => throw new System.Exception(); }");
 
         var diagnostic = diagnostics.Should().ContainSingle().Subject;
         diagnostic.Id.Should().Be(ResultTypeAnalyzer.DiagnosticId);

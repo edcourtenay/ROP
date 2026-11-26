@@ -1,0 +1,15 @@
+<Project>
+
+  <!--
+    The analyzer ships inside the ROP NuGet package, but analyzers are not applied across project
+    references, so every project in the repository references it directly. The analyzer project
+    itself is excluded to avoid a cycle.
+  -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' != 'ROP.Analyzers'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)src/ROP.Analyzers/ROP.Analyzers.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

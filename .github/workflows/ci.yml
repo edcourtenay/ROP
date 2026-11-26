@@ -31,3 +31,13 @@ jobs:
 
       - name: Test
         run: dotnet test ROP.sln --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack src/ROP/ROP.csproj --configuration Release --no-build --output ./artifacts
+
+      - name: Verify the analyzer is packaged
+        run: |
+          if ! unzip -l artifacts/*.nupkg | grep -q "analyzers/dotnet/cs/"; then
+            echo "::error::The analyzer is missing from the package"
+            exit 1
+          fi
