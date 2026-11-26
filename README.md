@@ -61,4 +61,5 @@ Most operations also have overloads for composing result-producing functions bef
 
 - `src/ROP` — the result type and railway composition extensions.
 - `src/ROP.Example` — an ASP.NET Core transfer API demonstrating validation, side effects, chaining and merging results into HTTP responses. Run it with `dotnet run --project src/ROP.Example`; see `requests.http` for sample requests.
-- `test/ROP.Tests` — tests for the library and example integration.
+- `test/ROP.Tests` — tests for the library.
+- `test/ROP.Example.Tests` — tests for the example application.

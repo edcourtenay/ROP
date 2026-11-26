@@ -5,7 +5,7 @@ using ROP.Example.Controllers;
 using ROP.Example.Models;
 using ROP.Example.Services;
 
-namespace ROP.Tests;
+namespace ROP.Example.Tests;
 
 public class TransferExampleTests
 {

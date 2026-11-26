@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ROP.Example;
 using ROP.Example.Services;
 
-namespace ROP.Tests;
+namespace ROP.Example.Tests;
 
 public class DependencyInjectionTests
 {
