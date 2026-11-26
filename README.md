@@ -1,5 +1,7 @@
 # ROP
 
+![NuGet Version](https://img.shields.io/nuget/vpre/EdCourtenay.ROP)
+
 ROP is a C# library for composing operations that can succeed or fail. It is inspired by Scott Wlaschin's [Railway Oriented Programming talk](https://fsharpforfunandprofit.com/rop/) and [blog post](https://fsharpforfunandprofit.com/posts/recipe-part2/).
 
 A `Result<TSuccess, TFailure>` carries a value on either the success or failure track. Operations composed with `Bind` run on success; a failure bypasses subsequent operations and is passed along unchanged. This makes the happy path readable without discarding expected errors.
@@ -60,19 +62,3 @@ Most operations also have overloads for composing result-producing functions bef
 - `src/ROP` — the result type and railway composition extensions.
 - `src/ROP.Example` — an ASP.NET Core transfer API demonstrating validation, side effects, chaining and merging results into HTTP responses. Run it with `dotnet run --project src/ROP.Example`; see `requests.http` for sample requests.
 - `test/ROP.Tests` — tests for the library and example integration.
-
-## Publishing
-
-Packages are versioned from git tags using [MinVer](https://github.com/adamralph/minver): a tag such as `v1.2.3` produces version `1.2.3`, while untagged builds get a prerelease version.
-
-To release:
-
-1. Tag the commit and push the tag:
-
-   ```shell
-   git tag v1.2.3
-   git push origin v1.2.3
-   ```
-
-2. The `Publish` workflow builds, tests and packs the library, then pauses on the `release` environment for approval.
-3. Approve the deployment, and the package is pushed to nuget.org using [Trusted Publishing](https://learn.microsoft.com/nuget/nuget-org/trusted-publishing) (a short-lived, OIDC-issued API key — no stored secret).
