@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Scalar.AspNetCore;
+
 namespace EdCourtenay.ROP.Example;
 
 public static class Startup
@@ -14,10 +16,7 @@ public static class Startup
         services.AddScoped<ITransferService, TransferService>();
         services.AddScoped<IValidationService, ValidationService>();
 
-        services.AddMvc(options =>
-        {
-            options.EnableEndpointRouting = false;
-        });
+        services.AddControllers();
 
         services.AddOpenApi();
     }
@@ -30,6 +29,7 @@ public static class Startup
         {
             app.UseDeveloperExceptionPage();
             app.MapOpenApi();
+            app.MapScalarApiReference();
         }
         else
         {
@@ -38,7 +38,7 @@ public static class Startup
         }
 
         //app.UseHttpsRedirection();
-        app.UseMvc();
+        app.MapControllers();
 
         return app;
     }
