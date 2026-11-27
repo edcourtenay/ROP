@@ -1,6 +1,7 @@
 ﻿using EdCourtenay.ROP.Example.Models;
 using EdCourtenay.ROP.Example.Services;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +31,10 @@ public class TransferController : ControllerBase
             .Bind(_transferService.CheckSufficientFunds)
             .Bind(_transferService.RingfenceSourceAccount)
             .Bind(_transferService.TransferRingfencedAmount)
-            .Merge(Ok, ActionResult (error) => BadRequest(error.ToString()));
+            .TeeFailure(error => _logger.LogWarning("Transfer failed: {Error}", error))
+            .Map(r => new TransferResponse(r.FromAccount, r.ToAccount, r.TransferAmount, r.RingfenceReference))
+            .MapFailure(error => new ProblemDetails { Title = "Transfer failed", Detail = error.ToString(), Status = StatusCodes.Status400BadRequest })
+            .Merge(Ok, ActionResult (problem) => BadRequest(problem));
 
         return func
             .Invoke(request);
