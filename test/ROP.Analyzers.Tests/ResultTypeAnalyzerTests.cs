@@ -43,8 +43,8 @@ public class ResultTypeAnalyzerTests
 
         var references = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!)
             .Split(Path.PathSeparator)
-            .Select(path => (MetadataReference)MetadataReference.CreateFromFile(path))
-            .Append(MetadataReference.CreateFromFile(typeof(global::EdCourtenay.ROP.Result<,>).Assembly.Location));
+            .Select(MetadataReference (path) => MetadataReference.CreateFromFile(path))
+            .Append(MetadataReference.CreateFromFile(typeof(Result<,>).Assembly.Location));
 
         var compilation = CSharpCompilation.Create(
             "AnalyzerTests",
@@ -52,7 +52,7 @@ public class ResultTypeAnalyzerTests
             references,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
-        var withAnalyzers = compilation.WithAnalyzers(ImmutableArray.Create<DiagnosticAnalyzer>(new ResultTypeAnalyzer()));
+        var withAnalyzers = compilation.WithAnalyzers([new ResultTypeAnalyzer()]);
 
         return await withAnalyzers.GetAnalyzerDiagnosticsAsync();
     }

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <PackageId>EdCourtenay.ROP</PackageId>
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="11.0.100" PrivateAssets="all" />
-    <PackageReference Include="MinVer" Version="8.0.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="all" />
+    <PackageReference Include="MinVer" PrivateAssets="all" />
   </ItemGroup>
 
   <PropertyGroup>
