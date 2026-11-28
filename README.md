@@ -26,22 +26,31 @@ dotnet add package EdCourtenay.ROP
 Return either a success or a failure value from an operation, then chain operations with `Bind`:
 
 ```csharp
-using System;
 using EdCourtenay.ROP;
 
-Result<int, string> CheckMinimum(int value) =>
-    value < 5 ? "Number too small" : value;
+Func<int, Result<int, string>> CheckMinimum =
+    value => value < 5 ? "Number too small" : value;
 
-Result<int, string> CheckMaximum(int value) =>
-    value > 10 ? "Number too large" : value;
+Func<int, Result<int, string>> CheckMaximum =
+    value => value > 10 ? "Number too large" : value;
 
-var result = CheckMinimum(7)
+var input = 11;
+
+var check = CheckMinimum
     .Bind(CheckMaximum)
     .Map(value => value * 2);
 
-result.Handle(
-    success => Console.WriteLine($"Result: {success}"),
-    failure => Console.WriteLine($"Error: {failure}"));
+var result = check(input);
+
+switch (result) {
+    case int success:
+        Console.WriteLine(success);    
+        break;
+
+    case string failure:
+        Console.WriteLine($"Failed: {failure}");
+        break;
+}
 ```
 
 For `7`, the result is `14`. For a value below `5`, `CheckMaximum` and `Map` are skipped and the error is handled instead.
